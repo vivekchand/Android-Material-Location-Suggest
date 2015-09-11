@@ -125,8 +125,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
     }
 
-
     private void setupSearchActionHandlers() {
+        searchResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                updateSearchHistory(searchResults.get(position).getTitle());
+            }
+        });
+
         searchHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -265,7 +271,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         searchAdapter.notifyDataSetChanged();
     }
 
-
     private void searchFood(final String item, final int page_num) {
         mAsyncTask = new AsyncTask<String, String, String>() {
             @Override
@@ -296,12 +301,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     if (!status.isSuccess()) {
                         return "";
                     }
-                    Log.e("Dwellbird", "Received "+autocompletePredictions.getCount());
+                    Log.e("Dwellbird", "Received " + autocompletePredictions.getCount());
 
                     Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
                     while (iterator.hasNext()) {
                         AutocompletePrediction prediction = iterator.next();
-                        Log.e("Dwellbird","place_id"+prediction.getPlaceId()+" place desc:"+prediction.getDescription());
+                        Log.e("Dwellbird", "place_id" + prediction.getPlaceId() + " place desc:" + prediction.getDescription());
                         searchResults.add(new Item(prediction.getDescription(), "",
                                 "" + brand, prediction.getPlaceId()));
                     }
