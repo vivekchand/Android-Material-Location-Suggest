@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private CardView card_search;
     private ImageView image_search_back, clearSearch;
     private EditText edit_text_search;
-    private ListView searchHistoryListView, listContainer;
+    private ListView searchHistoryListView, searchSuggestListView;
     private LogQuickSearchAdapter logQuickSearchAdapter;
     private Set<String> searchHistoryCacheSet;
     private ArrayList<Item> mItem;
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         // Adapter for showing search results
         mItem = new ArrayList<>();
         searchAdapter = new SearchAdapter(this, mItem);
-        listContainer.setAdapter(searchAdapter);
+        searchSuggestListView.setAdapter(searchAdapter);
 
         // Cache for storing search history
         searchHistoryCacheSet = new HashSet<>();
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         image_search_back = (ImageView) findViewById(R.id.image_search_back);
         clearSearch = (ImageView) findViewById(R.id.clearSearch);
         searchHistoryListView = (ListView) findViewById(R.id.listView);
-        listContainer = (ListView) findViewById(R.id.listContainer);
+        searchSuggestListView = (ListView) findViewById(R.id.listContainer);
         marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
     }
 
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void clearItems() {
-        listContainer.setVisibility(View.GONE);
+        searchSuggestListView.setVisibility(View.GONE);
         mItem.clear();
         searchAdapter.notifyDataSetChanged();
     }
@@ -297,11 +297,11 @@ public class MainActivity extends AppCompatActivity {
                 searchAdapter.notifyDataSetChanged();
                 if (mItem.size() > 0) {
                     toolbar_shadow.setVisibility(View.GONE);
-                    TranslateAnimation slide = new TranslateAnimation(0, 0, listContainer.getHeight(), 0);
+                    TranslateAnimation slide = new TranslateAnimation(0, 0, searchSuggestListView.getHeight(), 0);
                     slide.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
-                            listContainer.setVisibility(View.VISIBLE);
+                            searchSuggestListView.setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -315,12 +315,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     slide.setDuration(300);
-                    listContainer.startAnimation(slide);
-                    listContainer.setVerticalScrollbarPosition(0);
-                    listContainer.setSelection(0);
+                    searchSuggestListView.startAnimation(slide);
+                    searchSuggestListView.setVerticalScrollbarPosition(0);
+                    searchSuggestListView.setSelection(0);
                 } else {
                     toolbar_shadow.setVisibility(View.VISIBLE);
-                    listContainer.setVisibility(View.GONE);
+                    searchSuggestListView.setVisibility(View.GONE);
                 }
 
             }
