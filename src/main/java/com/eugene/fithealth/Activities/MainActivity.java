@@ -86,13 +86,19 @@ public class MainActivity extends AppCompatActivity {
         marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
         marker_progress.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"),//Pink color
             android.graphics.PorterDuff.Mode.MULTIPLY);
+
+        // Adapter for storing search history
         logQuickSearchAdapter = new LogQuickSearchAdapter(this, 0, LogQuickSearch.all());
+        listView.setAdapter(logQuickSearchAdapter);
+
+        // Adapter for showing search results
         mItem = new ArrayList<>();
         searchAdapter = new SearchAdapter(this, mItem);
-        listView.setAdapter(logQuickSearchAdapter);
         listContainer.setAdapter(searchAdapter);
+
         set = new HashSet<>();
         mFatSecretSearch = new FatSecretSearchItem();
+
         SetTypeFace();
         InitiateSearch();
         HandleSearch();
@@ -172,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void UpdateQuickSearch(String item) {
+    private void updateQuickSearch(String item) {
         for (int i = 0; i < logQuickSearchAdapter.getCount(); i++) {
             LogQuickSearch ls = logQuickSearchAdapter.getItem(i);
             String name = ls.getName();
@@ -202,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                     if (edit_text_search.getText().toString().trim().length() > 0) {
                         clearItems();
                         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
-                        UpdateQuickSearch(edit_text_search.getText().toString());
+                        updateQuickSearch(edit_text_search.getText().toString());
                         listView.setVisibility(View.GONE);
                         searchFood(edit_text_search.getText().toString(), 0);
                         toolbar_shadow.setVisibility(View.GONE);
