@@ -34,7 +34,6 @@ import com.eugene.fithealth.LogQuickSearchData.LogQuickSearchAdapter;
 import com.eugene.fithealth.R;
 import com.eugene.fithealth.SearchListView.Item;
 import com.eugene.fithealth.SearchListView.SearchAdapter;
-import com.eugene.fithealth.Utilities.InitiateSearch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,8 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem) {
                     case R.id.action_search:
                         isSearchHistoryAdapterEmpty();
-                        InitiateSearch.handleToolBar(
-                                MainActivity.this, card_search, toolbar, view_search, listView, edit_text_search, line_divider);
                         break;
                     default:
                         break;
@@ -155,7 +152,8 @@ public class MainActivity extends AppCompatActivity {
                     clearSearch.setImageBitmap(null);
                     isSearchHistoryAdapterEmpty();
                 } else {
-                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(edit_text_search.getText().toString()));
+                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(
+                            edit_text_search.getText().toString()));
                     listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setImageResource(R.mipmap.ic_close);
                     isSearchHistoryAdapterEmpty();
@@ -176,8 +174,11 @@ public class MainActivity extends AppCompatActivity {
                     mAsyncTask.cancel(true);
                     edit_text_search.setText("");
                     listView.setVisibility(View.VISIBLE);
+
                     clearItems();
-                    ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+
+                    ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
+                            InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
                     isSearchHistoryAdapterEmpty();
                 }
             }
