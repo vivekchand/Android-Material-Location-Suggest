@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +31,6 @@ import android.widget.TextView;
 import com.eugene.fithealth.FatSecretSearchAndGet.FatSecretSearchItem;
 import com.eugene.fithealth.LogQuickSearchData.LogQuickSearch;
 import com.eugene.fithealth.LogQuickSearchData.LogQuickSearchAdapter;
-import com.eugene.fithealth.MyPagerAdapter;
 import com.eugene.fithealth.R;
 import com.eugene.fithealth.SearchListView.Item;
 import com.eugene.fithealth.SearchListView.SearchAdapter;
@@ -96,23 +94,11 @@ public class MainActivity extends AppCompatActivity {
         set = new HashSet<>();
         mFatSecretSearch = new FatSecretSearchItem();
         SetTypeFace();
-        InitiateToolbarTabs();
         InitiateSearch();
         HandleSearch();
         IsAdapterEmpty();
     }
 
-    private void InitiateToolbarTabs() {
-        toolbar.setTitleTextColor(res.getColor(R.color.text_color));
-        toolbar.setNavigationIcon(R.mipmap.ic_menu);
-        toolbar.inflateMenu(R.menu.menu_main);
-        tabs.setTabTextColors(Color.parseColor("#906D6D6D"), Color.parseColor("#6D6D6D"));
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        MyPagerAdapter pagerAdapterToolbarSearch = new MyPagerAdapter(this, getSupportFragmentManager());
-        viewPager.setAdapter(pagerAdapterToolbarSearch);
-        tabs.setupWithViewPager(viewPager);
-    }
 
     private void InitiateSearch() {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
