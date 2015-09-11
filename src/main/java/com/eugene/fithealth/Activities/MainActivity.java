@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText edit_text_search;
     private ListView listView, listContainer;
     private LogQuickSearchAdapter logQuickSearchAdapter;
-    private Set<String> set;
+    private Set<String> searchHistoryCacheSet;
     private ArrayList<Item> mItem;
     private FatSecretSearchItem mFatSecretSearch;
     private SearchAdapter searchAdapter;
@@ -96,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
         searchAdapter = new SearchAdapter(this, mItem);
         listContainer.setAdapter(searchAdapter);
 
-        set = new HashSet<>();
+        // Cache for storing search history
+        searchHistoryCacheSet = new HashSet<>();
+
+        // Makes the actual search
         mFatSecretSearch = new FatSecretSearchItem();
 
         SetTypeFace();
@@ -182,9 +185,9 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < logQuickSearchAdapter.getCount(); i++) {
             LogQuickSearch ls = logQuickSearchAdapter.getItem(i);
             String name = ls.getName();
-            set.add(name.toUpperCase());
+            searchHistoryCacheSet.add(name.toUpperCase());
         }
-        if (set.add(item.toUpperCase())) {
+        if (searchHistoryCacheSet.add(item.toUpperCase())) {
             LogQuickSearch recentLog = new LogQuickSearch();
             recentLog.setName(item);
             recentLog.setDate(new Date());
