@@ -91,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         // Makes the actual search
         mFatSecretSearch = new FatSecretSearchItem();
 
-        setTypeFace();
-        initiateSearch();
+        setupTypeFace();
+        setupSearchActionHandlers();
         handleSearch();
         isSearchHistoryAdapterEmpty();
     }
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void initiateSearch() {
+    private void setupSearchActionHandlers() {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -217,7 +217,10 @@ public class MainActivity extends AppCompatActivity {
                         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
                         updateQuickSearch(edit_text_search.getText().toString());
                         listView.setVisibility(View.GONE);
+
+                        // Make the actual search
                         searchFood(edit_text_search.getText().toString(), 0);
+
                         toolbar_shadow.setVisibility(View.GONE);
                     }
                     return true;
@@ -235,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setTypeFace() {
+    private void setupTypeFace() {
         Typeface roboto_regular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         edit_text_search.setTypeface(roboto_regular);
     }
