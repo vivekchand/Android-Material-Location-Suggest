@@ -17,9 +17,9 @@
             android:id="@+id/food_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:text="@string/string_filler"
             android:textColor="@color/text_color"
-            android:textSize="16sp"/>
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/food_brand"

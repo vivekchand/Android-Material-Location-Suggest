@@ -11,7 +11,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="50dp"
         android:background="@color/primary"
         app:title="Fit Health"/>
 
@@ -82,6 +82,7 @@
                     android:inputType="textCapWords"
                     android:paddingLeft="12dp"
                     android:paddingRight="8dp"
+                    android:textSize="14sp"
                     android:singleLine="true"/>
 
                 <ImageView
