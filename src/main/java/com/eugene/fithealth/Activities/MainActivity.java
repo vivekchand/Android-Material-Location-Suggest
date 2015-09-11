@@ -53,10 +53,10 @@ public class MainActivity extends AppCompatActivity {
     private CardView card_search;
     private ImageView image_search_back, clearSearch;
     private EditText edit_text_search;
-    private ListView searchHistoryListView, searchSuggestListView;
+    private ListView searchHistoryListView, searchResultListView;
     private LogQuickSearchAdapter logQuickSearchAdapter;
     private Set<String> searchHistoryCacheSet;
-    private ArrayList<Item> mItem;
+    private ArrayList<Item> searchResults;
     private FatSecretSearchItem mFatSecretSearch;
     private SearchAdapter searchAdapter;
     private ProgressBar marker_progress;
@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
         searchHistoryListView.setAdapter(logQuickSearchAdapter);
 
         // Adapter for showing search results
-        mItem = new ArrayList<>();
-        searchAdapter = new SearchAdapter(this, mItem);
-        searchSuggestListView.setAdapter(searchAdapter);
+        searchResults = new ArrayList<>();
+        searchAdapter = new SearchAdapter(this, searchResults);
+        searchResultListView.setAdapter(searchAdapter);
 
         // Cache for storing search history
         searchHistoryCacheSet = new HashSet<>();
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         image_search_back = (ImageView) findViewById(R.id.image_search_back);
         clearSearch = (ImageView) findViewById(R.id.clearSearch);
         searchHistoryListView = (ListView) findViewById(R.id.listView);
-        searchSuggestListView = (ListView) findViewById(R.id.listContainer);
+        searchResultListView = (ListView) findViewById(R.id.listContainer);
         marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
     }
 
@@ -243,8 +243,8 @@ public class MainActivity extends AppCompatActivity {
      */
 
     private void clearItems() {
-        searchSuggestListView.setVisibility(View.GONE);
-        mItem.clear();
+        searchResultListView.setVisibility(View.GONE);
+        searchResults.clear();
         searchAdapter.notifyDataSetChanged();
     }
 
@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
                                     brand = "Generic";
                                 }
                                 String food_id = food_items.getString("food_id");
-                                mItem.add(new Item(food_name, row[1].substring(1),
+                                searchResults.add(new Item(food_name, row[1].substring(1),
                                         "" + brand, food_id));
                             }
                         }
@@ -295,13 +295,13 @@ public class MainActivity extends AppCompatActivity {
                 super.onPostExecute(result);
                 marker_progress.setVisibility(View.GONE);
                 searchAdapter.notifyDataSetChanged();
-                if (mItem.size() > 0) {
+                if (searchResults.size() > 0) {
                     toolbar_shadow.setVisibility(View.GONE);
-                    TranslateAnimation slide = new TranslateAnimation(0, 0, searchSuggestListView.getHeight(), 0);
+                    TranslateAnimation slide = new TranslateAnimation(0, 0, searchResultListView.getHeight(), 0);
                     slide.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
-                            searchSuggestListView.setVisibility(View.VISIBLE);
+                            searchResultListView.setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -315,12 +315,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     slide.setDuration(300);
-                    searchSuggestListView.startAnimation(slide);
-                    searchSuggestListView.setVerticalScrollbarPosition(0);
-                    searchSuggestListView.setSelection(0);
+                    searchResultListView.startAnimation(slide);
+                    searchResultListView.setVerticalScrollbarPosition(0);
+                    searchResultListView.setSelection(0);
                 } else {
                     toolbar_shadow.setVisibility(View.VISIBLE);
-                    searchSuggestListView.setVisibility(View.GONE);
+                    searchResultListView.setVisibility(View.GONE);
                 }
 
             }
