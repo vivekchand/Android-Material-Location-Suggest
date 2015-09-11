@@ -188,7 +188,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 if (edit_text_search.getText().toString().length() == 0) {
                     clearItems();
                 } else {
-                    mAsyncTask.cancel(true);
+                    if(mAsyncTask != null) {
+                        mAsyncTask.cancel(true);
+                    }
                     edit_text_search.setText("");
                     searchHistoryListView.setVisibility(View.VISIBLE);
 
