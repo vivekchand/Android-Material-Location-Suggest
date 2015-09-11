@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
 
                 toolbar_shadow.setVisibility(View.GONE);
-                searchFood(logQuickSearch.getName(), 0);
+                searchPlaces(logQuickSearch.getName(), 0);
             }
         });
         edit_text_search.addTextChangedListener(new TextWatcher() {
@@ -159,15 +159,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
                     searchHistoryListView.setAdapter(logQuickSearchAdapter);
 
+                    clearItems();
                     // no button
                     clearSearch.setImageBitmap(null);
 
                     showLineDividerIfSearchHistoryIsNotEmpty();
                 } else {
-                    searchHistoryListView.setVisibility(View.GONE);
+                    if(edit_text_search.getText().toString().length() > 2 ) {
+                        searchHistoryListView.setVisibility(View.GONE);
+                        // Make the actual search
+                        searchPlaces(edit_text_search.getText().toString(), 0);
+                    }
 
-                    // Make the actual search
-                    searchFood(edit_text_search.getText().toString(), 0);
                     // set close button
                     clearSearch.setImageResource(R.mipmap.ic_close);
 
@@ -184,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             @Override
             public void onClick(View v) {
                 if (edit_text_search.getText().toString().length() == 0) {
-
+                    clearItems();
                 } else {
                     mAsyncTask.cancel(true);
                     edit_text_search.setText("");
@@ -235,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         searchHistoryListView.setVisibility(View.GONE);
 
                         // Make the actual search
-                        searchFood(edit_text_search.getText().toString(), 0);
+                        searchPlaces(edit_text_search.getText().toString(), 0);
 
                         toolbar_shadow.setVisibility(View.GONE);
                     }
@@ -269,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         searchAdapter.notifyDataSetChanged();
     }
 
-    private void searchFood(final String item, final int page_num) {
+    private void searchPlaces(final String item, final int page_num) {
         mAsyncTask = new AsyncTask<String, String, String>() {
             @Override
             protected void onPreExecute() {
