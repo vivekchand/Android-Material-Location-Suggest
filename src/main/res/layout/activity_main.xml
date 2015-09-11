@@ -92,8 +92,7 @@
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:contentDescription="@string/voice_cancel"
-                    android:padding="12dp"
-                    android:src="@mipmap/ic_keyboard_voice"/>
+                    android:padding="12dp"/>
             </LinearLayout>
 
             <View

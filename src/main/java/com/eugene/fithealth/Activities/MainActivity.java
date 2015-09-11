@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 if (edit_text_search.getText().toString().length() == 0) {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
                     listView.setAdapter(logQuickSearchAdapter);
-                    clearSearch.setImageResource(R.mipmap.ic_keyboard_voice);
+                    clearSearch.setImageBitmap(null);
                     IsAdapterEmpty();
                 } else {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(edit_text_search.getText().toString()));
