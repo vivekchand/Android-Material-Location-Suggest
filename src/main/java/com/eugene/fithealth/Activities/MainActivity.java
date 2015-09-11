@@ -206,10 +206,7 @@ public class MainActivity extends AppCompatActivity {
         image_search_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initiateSearch.handleToolBar(MainActivity.this, card_search, toolbar, view_search, listView, edit_text_search, line_divider);
-                listContainer.setVisibility(View.GONE);
-                toolbar_shadow.setVisibility(View.VISIBLE);
-                clearItems();
+                finish();
             }
         });
         edit_text_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
