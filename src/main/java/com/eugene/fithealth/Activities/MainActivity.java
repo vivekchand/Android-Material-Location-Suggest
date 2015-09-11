@@ -102,21 +102,21 @@ public class MainActivity extends AppCompatActivity {
         // Makes the actual search
         mFatSecretSearch = new FatSecretSearchItem();
 
-        SetTypeFace();
-        InitiateSearch();
-        HandleSearch();
-        IsAdapterEmpty();
+        setTypeFace();
+        initiateSearch();
+        handleSearch();
+        isAdapterEmpty();
     }
 
 
-    private void InitiateSearch() {
+    private void initiateSearch() {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int menuItem = item.getItemId();
                 switch (menuItem) {
                     case R.id.action_search:
-                        IsAdapterEmpty();
+                        isAdapterEmpty();
                         initiateSearch.handleToolBar(
                                 MainActivity.this, card_search, toolbar, view_search, listView, edit_text_search, line_divider);
                         break;
@@ -149,12 +149,12 @@ public class MainActivity extends AppCompatActivity {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
                     listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setImageBitmap(null);
-                    IsAdapterEmpty();
+                    isAdapterEmpty();
                 } else {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(edit_text_search.getText().toString()));
                     listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setImageResource(R.mipmap.ic_close);
-                    IsAdapterEmpty();
+                    isAdapterEmpty();
                 }
             }
 
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                     listView.setVisibility(View.VISIBLE);
                     clearItems();
                     ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                    IsAdapterEmpty();
+                    isAdapterEmpty();
                 }
             }
         });
@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void HandleSearch() {
+    private void handleSearch() {
         image_search_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void IsAdapterEmpty() {
+    private void isAdapterEmpty() {
         if (logQuickSearchAdapter.getCount() == 0) {
             line_divider.setVisibility(View.GONE);
         } else {
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void SetTypeFace() {
+    private void setTypeFace() {
         Typeface roboto_regular = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         edit_text_search.setTypeface(roboto_regular);
     }
