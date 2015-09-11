@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         setupTypeFace();
         setupSearchActionHandlers();
         handleSearch();
-        isSearchHistoryAdapterEmpty();
+        showLineDividerIfSearchHistoryIsNotEmpty();
     }
 
     private void findViews() {
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     // no button
                     clearSearch.setImageBitmap(null);
 
-                    isSearchHistoryAdapterEmpty();
+                    showLineDividerIfSearchHistoryIsNotEmpty();
                 } else {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(
                             edit_text_search.getText().toString()));
@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     // set close button
                     clearSearch.setImageResource(R.mipmap.ic_close);
 
-                    isSearchHistoryAdapterEmpty();
+                    showLineDividerIfSearchHistoryIsNotEmpty();
                 }
             }
 
@@ -173,14 +173,14 @@ public class MainActivity extends AppCompatActivity {
 
                     ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(
                             InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                    isSearchHistoryAdapterEmpty();
+                    showLineDividerIfSearchHistoryIsNotEmpty();
                 }
             }
         });
     }
 
 
-    private void updateQuickSearch(String item) {
+    private void updateSearchHistory(String item) {
         for (int i = 0; i < logQuickSearchAdapter.getCount(); i++) {
             LogQuickSearch ls = logQuickSearchAdapter.getItem(i);
             String name = ls.getName();
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                     if (edit_text_search.getText().toString().trim().length() > 0) {
                         clearItems();
                         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
-                        updateQuickSearch(edit_text_search.getText().toString());
+                        updateSearchHistory(edit_text_search.getText().toString());
                         searchHistoryListView.setVisibility(View.GONE);
 
                         // Make the actual search
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void isSearchHistoryAdapterEmpty() {
+    private void showLineDividerIfSearchHistoryIsNotEmpty() {
         if (logQuickSearchAdapter.getCount() == 0) {
             line_divider.setVisibility(View.GONE);
         } else {
