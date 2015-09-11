@@ -12,7 +12,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -302,13 +301,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     if (!status.isSuccess()) {
                         return "";
                     }
-                    Log.e("Dwellbird", "Received " + autocompletePredictions.getCount());
 
                     Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
                     searchResults.clear();
                     while (iterator.hasNext()) {
                         AutocompletePrediction prediction = iterator.next();
-                        Log.e("Dwellbird", "place_id" + prediction.getPlaceId() + " place desc:" + prediction.getDescription());
                         searchResults.add(new Item(prediction.getDescription(), "",
                                 "" + brand, prediction.getPlaceId()));
                     }
