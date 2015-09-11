@@ -15,8 +15,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -33,18 +31,24 @@ import com.eugene.fithealth.LogQuickSearchData.LogQuickSearchAdapter;
 import com.eugene.fithealth.R;
 import com.eugene.fithealth.SearchListView.Item;
 import com.eugene.fithealth.SearchListView.SearchAdapter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.location.places.AutocompletePrediction;
+import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private Resources res;
     private Toolbar toolbar;
     private TabLayout tabs;
@@ -62,12 +66,23 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar marker_progress;
     private String brand;
     private AsyncTask<String, String, String> mAsyncTask;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         res = this.getResources();
+
+        // Construct a GoogleApiClient for the {@link Places#GEO_DATA_API} using AutoManage
+        // functionality, which automatically sets up the API client to handle Activity lifecycle
+        // events. If your activity does not extend FragmentActivity, make sure to call connect()
+        // and disconnect() explicitly.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, 0 /* clientId */, this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
+
 
         findViews();
 
@@ -147,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
                             edit_text_search.getText().toString()));
                     searchHistoryListView.setAdapter(logQuickSearchAdapter);
 
+                    // Make the actual search
+                    searchFood(edit_text_search.getText().toString(), 0);
                     // set close button
                     clearSearch.setImageResource(R.mipmap.ic_close);
 
@@ -258,35 +275,68 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected String doInBackground(String... arg0) {
-                JSONObject food = mFatSecretSearch.searchFood(item, page_num);
-                JSONArray FOODS_ARRAY;
-                try {
-                    if (food != null) {
-                        FOODS_ARRAY = food.getJSONArray("food");
-                        if (FOODS_ARRAY != null) {
-                            for (int i = 0; i < FOODS_ARRAY.length(); i++) {
-                                JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
-                                Log.e("FOod", food_items.toString());
-                                String food_name = food_items.getString("food_name");
-                                String food_description = food_items.getString("food_description");
-                                String[] row = food_description.split("-");
-                                String id = food_items.getString("food_type");
-                                if (id.equals("Brand")) {
-                                    brand = food_items.getString("brand_name");
-                                }
-                                if (id.equals("Generic")) {
-                                    brand = "Generic";
-                                }
-                                String food_id = food_items.getString("food_id");
-                                searchResults.add(new Item(food_name, row[1].substring(1),
-                                        "" + brand, food_id));
-                            }
-                        }
+                if (mGoogleApiClient.isConnected()) {
+                    String query = item;
+                    LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
+                            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
+                    // Submit the query to the autocomplete API and retrieve a PendingResult that will
+                    // contain the results when the query completes.
+                    PendingResult<AutocompletePredictionBuffer> results =
+                            Places.GeoDataApi
+                                    .getAutocompletePredictions(mGoogleApiClient, query,
+                                            BOUNDS_GREATER_SYDNEY, null);
+
+                    // This method should have been called off the main UI thread. Block and wait for at most 60s
+                    // for a result from the API.
+                    AutocompletePredictionBuffer autocompletePredictions = results
+                            .await(60, TimeUnit.SECONDS);
+
+                    // Confirm that the query completed successfully, otherwise return null
+                    final com.google.android.gms.common.api.Status status = autocompletePredictions.getStatus();
+                    boolean queryComplete = true;
+                    if (!status.isSuccess()) {
+                        queryComplete = false;
                     }
-                } catch (JSONException exception) {
-                    exception.printStackTrace();
-                    return "Error";
+                    Log.e("Dwellbird", "Received "+autocompletePredictions.getCount());
+
+                    Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
+                    while (iterator.hasNext()) {
+                        AutocompletePrediction prediction = iterator.next();
+                        Log.e("Dwellbird","place_id"+prediction.getPlaceId()+" place desc:"+prediction.getDescription());
+                        searchResults.add(new Item(prediction.getDescription(), "",
+                                "" + brand, prediction.getPlaceId()));
+                    }
+
                 }
+//                JSONObject food = mFatSecretSearch.searchFood(item, page_num);
+//                JSONArray FOODS_ARRAY;
+//                try {
+//                    if (food != null) {
+//                        FOODS_ARRAY = food.getJSONArray("food");
+//                        if (FOODS_ARRAY != null) {
+//                            for (int i = 0; i < FOODS_ARRAY.length(); i++) {
+//                                JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
+//                                Log.e("FOod", food_items.toString());
+//                                String food_name = food_items.getString("food_name");
+//                                String food_description = food_items.getString("food_description");
+//                                String[] row = food_description.split("-");
+//                                String id = food_items.getString("food_type");
+//                                if (id.equals("Brand")) {
+//                                    brand = food_items.getString("brand_name");
+//                                }
+//                                if (id.equals("Generic")) {
+//                                    brand = "Generic";
+//                                }
+//                                String food_id = food_items.getString("food_id");
+//                                searchResults.add(new Item(food_name, row[1].substring(1),
+//                                        "" + brand, food_id));
+//                            }
+//                        }
+//                    }
+//                } catch (JSONException exception) {
+//                    exception.printStackTrace();
+//                    return "Error";
+//                }
                 return "";
             }
 
@@ -295,33 +345,34 @@ public class MainActivity extends AppCompatActivity {
                 super.onPostExecute(result);
                 marker_progress.setVisibility(View.GONE);
                 searchAdapter.notifyDataSetChanged();
-                if (searchResults.size() > 0) {
-                    toolbar_shadow.setVisibility(View.GONE);
-                    TranslateAnimation slide = new TranslateAnimation(0, 0, searchResultListView.getHeight(), 0);
-                    slide.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            searchResultListView.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-                    slide.setDuration(300);
-                    searchResultListView.startAnimation(slide);
-                    searchResultListView.setVerticalScrollbarPosition(0);
-                    searchResultListView.setSelection(0);
-                } else {
-                    toolbar_shadow.setVisibility(View.VISIBLE);
-                    searchResultListView.setVisibility(View.GONE);
-                }
+                searchResultListView.setVisibility(View.VISIBLE);
+//                if (searchResults.size() > 0) {
+//                    toolbar_shadow.setVisibility(View.GONE);
+//                    TranslateAnimation slide = new TranslateAnimation(0, 0, searchResultListView.getHeight(), 0);
+//                    slide.setAnimationListener(new Animation.AnimationListener() {
+//                        @Override
+//                        public void onAnimationStart(Animation animation) {
+//                            searchResultListView.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onAnimationEnd(Animation animation) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onAnimationRepeat(Animation animation) {
+//
+//                        }
+//                    });
+//                    slide.setDuration(300);
+//                    searchResultListView.startAnimation(slide);
+//                    searchResultListView.setVerticalScrollbarPosition(0);
+//                    searchResultListView.setSelection(0);
+//                } else {
+//                    toolbar_shadow.setVisibility(View.VISIBLE);
+//                    searchResultListView.setVisibility(View.GONE);
+//                }
 
             }
 
@@ -332,5 +383,10 @@ public class MainActivity extends AppCompatActivity {
 
         };
         mAsyncTask.execute();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }
