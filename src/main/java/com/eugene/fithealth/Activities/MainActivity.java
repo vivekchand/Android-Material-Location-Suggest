@@ -164,9 +164,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                     showLineDividerIfSearchHistoryIsNotEmpty();
                 } else {
-                    logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(
-                            edit_text_search.getText().toString()));
-                    searchHistoryListView.setAdapter(logQuickSearchAdapter);
+                    searchHistoryListView.setVisibility(View.GONE);
 
                     // Make the actual search
                     searchFood(edit_text_search.getText().toString(), 0);
