@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         setTypeFace();
         initiateSearch();
         handleSearch();
-        isAdapterEmpty();
+        isSearchHistoryAdapterEmpty();
     }
 
     private void findViews() {
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 int menuItem = item.getItemId();
                 switch (menuItem) {
                     case R.id.action_search:
-                        isAdapterEmpty();
+                        isSearchHistoryAdapterEmpty();
                         InitiateSearch.handleToolBar(
                                 MainActivity.this, card_search, toolbar, view_search, listView, edit_text_search, line_divider);
                         break;
@@ -153,12 +153,12 @@ public class MainActivity extends AppCompatActivity {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
                     listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setImageBitmap(null);
-                    isAdapterEmpty();
+                    isSearchHistoryAdapterEmpty();
                 } else {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(edit_text_search.getText().toString()));
                     listView.setAdapter(logQuickSearchAdapter);
                     clearSearch.setImageResource(R.mipmap.ic_close);
-                    isAdapterEmpty();
+                    isSearchHistoryAdapterEmpty();
                 }
             }
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     listView.setVisibility(View.VISIBLE);
                     clearItems();
                     ((InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-                    isAdapterEmpty();
+                    isSearchHistoryAdapterEmpty();
                 }
             }
         });
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void isAdapterEmpty() {
+    private void isSearchHistoryAdapterEmpty() {
         if (logQuickSearchAdapter.getCount() == 0) {
             line_divider.setVisibility(View.GONE);
         } else {
