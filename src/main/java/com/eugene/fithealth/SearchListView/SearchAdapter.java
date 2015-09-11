@@ -30,7 +30,6 @@ public class SearchAdapter extends ArrayAdapter<Item> {
         View v = inflater.inflate(R.layout.list_search_row, parent, false);
         TextView mFoodName = (TextView) v.findViewById(R.id.food_name);
         mFoodName.setText(mItem.get(position).getTitle());
-        RelativeLayout back = (RelativeLayout) v.findViewById(R.id.list_back);
         return v;
     }
 
