@@ -305,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     Log.e("Dwellbird", "Received " + autocompletePredictions.getCount());
 
                     Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
+                    searchResults.clear();
                     while (iterator.hasNext()) {
                         AutocompletePrediction prediction = iterator.next();
                         Log.e("Dwellbird", "place_id" + prediction.getPlaceId() + " place desc:" + prediction.getDescription());
