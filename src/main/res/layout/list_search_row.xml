@@ -21,15 +21,15 @@
             android:textColor="@color/text_color"
             android:textSize="14sp"/>
 
-        <TextView
-            android:id="@+id/food_brand"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/food_name"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textSize="14sp"/>
+        <!--<TextView-->
+            <!--android:id="@+id/food_brand"-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/food_name"-->
+            <!--android:singleLine="true"-->
+            <!--android:textColor="@color/text_color"-->
+            <!--android:textSize="14sp"/>-->
 
     </LinearLayout>
 </RelativeLayout>

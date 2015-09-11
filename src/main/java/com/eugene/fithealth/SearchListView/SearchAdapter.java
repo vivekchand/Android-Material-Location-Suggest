@@ -29,9 +29,7 @@ public class SearchAdapter extends ArrayAdapter<Item> {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.list_search_row, parent, false);
         TextView mFoodName = (TextView) v.findViewById(R.id.food_name);
-        TextView mBrand = (TextView) v.findViewById(R.id.food_brand);
         mFoodName.setText(mItem.get(position).getTitle());
-        mBrand.setText(mItem.get(position).getBrand());
         RelativeLayout back = (RelativeLayout) v.findViewById(R.id.list_back);
         return v;
     }
