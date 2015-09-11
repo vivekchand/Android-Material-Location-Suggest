@@ -293,9 +293,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                     // Confirm that the query completed successfully, otherwise return null
                     final com.google.android.gms.common.api.Status status = autocompletePredictions.getStatus();
-                    boolean queryComplete = true;
                     if (!status.isSuccess()) {
-                        queryComplete = false;
+                        return "";
                     }
                     Log.e("Dwellbird", "Received "+autocompletePredictions.getCount());
 
@@ -308,35 +307,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     }
 
                 }
-//                JSONObject food = mFatSecretSearch.searchFood(item, page_num);
-//                JSONArray FOODS_ARRAY;
-//                try {
-//                    if (food != null) {
-//                        FOODS_ARRAY = food.getJSONArray("food");
-//                        if (FOODS_ARRAY != null) {
-//                            for (int i = 0; i < FOODS_ARRAY.length(); i++) {
-//                                JSONObject food_items = FOODS_ARRAY.optJSONObject(i);
-//                                Log.e("FOod", food_items.toString());
-//                                String food_name = food_items.getString("food_name");
-//                                String food_description = food_items.getString("food_description");
-//                                String[] row = food_description.split("-");
-//                                String id = food_items.getString("food_type");
-//                                if (id.equals("Brand")) {
-//                                    brand = food_items.getString("brand_name");
-//                                }
-//                                if (id.equals("Generic")) {
-//                                    brand = "Generic";
-//                                }
-//                                String food_id = food_items.getString("food_id");
-//                                searchResults.add(new Item(food_name, row[1].substring(1),
-//                                        "" + brand, food_id));
-//                            }
-//                        }
-//                    }
-//                } catch (JSONException exception) {
-//                    exception.printStackTrace();
-//                    return "Error";
-//                }
                 return "";
             }
 
@@ -346,34 +316,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 marker_progress.setVisibility(View.GONE);
                 searchAdapter.notifyDataSetChanged();
                 searchResultListView.setVisibility(View.VISIBLE);
-//                if (searchResults.size() > 0) {
-//                    toolbar_shadow.setVisibility(View.GONE);
-//                    TranslateAnimation slide = new TranslateAnimation(0, 0, searchResultListView.getHeight(), 0);
-//                    slide.setAnimationListener(new Animation.AnimationListener() {
-//                        @Override
-//                        public void onAnimationStart(Animation animation) {
-//                            searchResultListView.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        @Override
-//                        public void onAnimationEnd(Animation animation) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onAnimationRepeat(Animation animation) {
-//
-//                        }
-//                    });
-//                    slide.setDuration(300);
-//                    searchResultListView.startAnimation(slide);
-//                    searchResultListView.setVerticalScrollbarPosition(0);
-//                    searchResultListView.setSelection(0);
-//                } else {
-//                    toolbar_shadow.setVisibility(View.VISIBLE);
-//                    searchResultListView.setVisibility(View.GONE);
-//                }
-
             }
 
             @Override
