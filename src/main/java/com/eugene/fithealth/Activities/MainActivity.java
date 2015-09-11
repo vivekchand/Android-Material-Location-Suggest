@@ -72,18 +72,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         res = this.getResources();
         initiateSearch = new InitiateSearch();
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabs = (TabLayout) findViewById(R.id.tabs);
-        view_search = (RelativeLayout) findViewById(R.id.view_search);
-        line_divider = findViewById(R.id.line_divider);
-        toolbar_shadow = findViewById(R.id.toolbar_shadow);
-        edit_text_search = (EditText) findViewById(R.id.edit_text_search);
-        card_search = (CardView) findViewById(R.id.card_search);
-        image_search_back = (ImageView) findViewById(R.id.image_search_back);
-        clearSearch = (ImageView) findViewById(R.id.clearSearch);
-        listView = (ListView) findViewById(R.id.listView);
-        listContainer = (ListView) findViewById(R.id.listContainer);
-        marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
+
+        findViews();
+        
         marker_progress.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"),//Pink color
             android.graphics.PorterDuff.Mode.MULTIPLY);
 
@@ -106,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
         initiateSearch();
         handleSearch();
         isAdapterEmpty();
+    }
+
+    private void findViews() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        tabs = (TabLayout) findViewById(R.id.tabs);
+        view_search = (RelativeLayout) findViewById(R.id.view_search);
+        line_divider = findViewById(R.id.line_divider);
+        toolbar_shadow = findViewById(R.id.toolbar_shadow);
+        edit_text_search = (EditText) findViewById(R.id.edit_text_search);
+        card_search = (CardView) findViewById(R.id.card_search);
+        image_search_back = (ImageView) findViewById(R.id.image_search_back);
+        clearSearch = (ImageView) findViewById(R.id.clearSearch);
+        listView = (ListView) findViewById(R.id.listView);
+        listContainer = (ListView) findViewById(R.id.listContainer);
+        marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
     }
 
 
