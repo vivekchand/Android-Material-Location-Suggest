@@ -14,7 +14,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private CardView card_search;
     private ImageView image_search_back, clearSearch;
     private EditText edit_text_search;
-    private ListView listView, listContainer;
+    private ListView searchHistoryListView, listContainer;
     private LogQuickSearchAdapter logQuickSearchAdapter;
     private Set<String> searchHistoryCacheSet;
     private ArrayList<Item> mItem;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Adapter for storing search history
         logQuickSearchAdapter = new LogQuickSearchAdapter(this, 0, LogQuickSearch.all());
-        listView.setAdapter(logQuickSearchAdapter);
+        searchHistoryListView.setAdapter(logQuickSearchAdapter);
 
         // Adapter for showing search results
         mItem = new ArrayList<>();
@@ -106,34 +105,22 @@ public class MainActivity extends AppCompatActivity {
         card_search = (CardView) findViewById(R.id.card_search);
         image_search_back = (ImageView) findViewById(R.id.image_search_back);
         clearSearch = (ImageView) findViewById(R.id.clearSearch);
-        listView = (ListView) findViewById(R.id.listView);
+        searchHistoryListView = (ListView) findViewById(R.id.listView);
         listContainer = (ListView) findViewById(R.id.listContainer);
         marker_progress = (ProgressBar) findViewById(R.id.marker_progress);
     }
 
 
     private void setupSearchActionHandlers() {
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int menuItem = item.getItemId();
-                switch (menuItem) {
-                    case R.id.action_search:
-                        isSearchHistoryAdapterEmpty();
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        searchHistoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LogQuickSearch logQuickSearch = logQuickSearchAdapter.getItem(position);
                 edit_text_search.setText(logQuickSearch.getName());
-                listView.setVisibility(View.GONE);
+                searchHistoryListView.setVisibility(View.GONE);
+
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
+
                 toolbar_shadow.setVisibility(View.GONE);
                 searchFood(logQuickSearch.getName(), 0);
             }
@@ -144,18 +131,25 @@ public class MainActivity extends AppCompatActivity {
 
             }
 
+            // Decides to whether show the close button or not
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (edit_text_search.getText().toString().length() == 0) {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.all());
-                    listView.setAdapter(logQuickSearchAdapter);
+                    searchHistoryListView.setAdapter(logQuickSearchAdapter);
+
+                    // no button
                     clearSearch.setImageBitmap(null);
+
                     isSearchHistoryAdapterEmpty();
                 } else {
                     logQuickSearchAdapter = new LogQuickSearchAdapter(MainActivity.this, 0, LogQuickSearch.FilterByName(
                             edit_text_search.getText().toString()));
-                    listView.setAdapter(logQuickSearchAdapter);
+                    searchHistoryListView.setAdapter(logQuickSearchAdapter);
+
+                    // set close button
                     clearSearch.setImageResource(R.mipmap.ic_close);
+
                     isSearchHistoryAdapterEmpty();
                 }
             }
@@ -173,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     mAsyncTask.cancel(true);
                     edit_text_search.setText("");
-                    listView.setVisibility(View.VISIBLE);
+                    searchHistoryListView.setVisibility(View.VISIBLE);
 
                     clearItems();
 
@@ -217,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
                         clearItems();
                         ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(edit_text_search.getWindowToken(), 0);
                         updateQuickSearch(edit_text_search.getText().toString());
-                        listView.setVisibility(View.GONE);
+                        searchHistoryListView.setVisibility(View.GONE);
 
                         // Make the actual search
                         searchFood(edit_text_search.getText().toString(), 0);
