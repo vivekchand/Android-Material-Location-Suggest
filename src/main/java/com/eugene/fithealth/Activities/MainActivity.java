@@ -48,7 +48,6 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private Resources res;
-    private InitiateSearch initiateSearch;
     private Toolbar toolbar;
     private TabLayout tabs;
     private View line_divider, toolbar_shadow;
@@ -71,12 +70,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         res = this.getResources();
-        initiateSearch = new InitiateSearch();
 
         findViews();
-        
+
         marker_progress.getIndeterminateDrawable().setColorFilter(Color.parseColor("#FFFFFF"),//Pink color
-            android.graphics.PorterDuff.Mode.MULTIPLY);
+                android.graphics.PorterDuff.Mode.MULTIPLY);
 
         // Adapter for storing search history
         logQuickSearchAdapter = new LogQuickSearchAdapter(this, 0, LogQuickSearch.all());
@@ -123,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (menuItem) {
                     case R.id.action_search:
                         isAdapterEmpty();
-                        initiateSearch.handleToolBar(
+                        InitiateSearch.handleToolBar(
                                 MainActivity.this, card_search, toolbar, view_search, listView, edit_text_search, line_divider);
                         break;
                     default:
@@ -283,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 String food_id = food_items.getString("food_id");
                                 mItem.add(new Item(food_name, row[1].substring(1),
-                                    "" + brand, food_id));
+                                        "" + brand, food_id));
                             }
                         }
                     }
